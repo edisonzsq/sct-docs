@@ -8,7 +8,8 @@ sequenceDiagram
     participant Profile as User / Company Profile Store
     participant MarketDB as Curated Market Statistics DB
     participant News as Web / News Search API
-    participant LLM as LLM / SLM
+    participant LLM as LLM
+    participant SLM as SLM
     participant ReportDB as Report History Store
     participant Admin as System Admin
 
@@ -18,13 +19,13 @@ sequenceDiagram
     AI->>Profile: Fetch user/company context
     Profile-->>AI: Company profile + past preferences
 
-    AI->>AI: Identify product category
+    AI->>SLM: Identify product category by company and product details
     AI->>MarketDB: Fetch market statistics by product category
     MarketDB-->>AI: Country market scores + rationale
 
-    AI->>AI: Shortlist top 5 countries
+    AI->>SLM: Rank all available countries
 
-    loop For each shortlisted country
+    loop For each country
         AI->>News: Search recent external signals<br/>(news, tariff, regulation, competition)
         News-->>AI: Search results + sources
     end
